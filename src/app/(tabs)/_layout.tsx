@@ -31,20 +31,14 @@ export default function TabLayout() {
         options={{
           title: "Inicio",
           tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
-          headerRight: () => (
-            <Link href="/myprofile" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="search"
-                    size={25}
-                    color={Colors[colorScheme ?? "light"].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="search"
+        options={{
+          title: "Buscar Eventos",
+          tabBarIcon: ({ color }) => <TabBarIcon name="search" color={color} />,
         }}
       />
 
@@ -55,8 +49,9 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <TabBarIcon name="bell" color={color} />,
         }}
       />
+
       <Tabs.Screen
-        name="two"
+        name="profile"
         options={{
           title: "Meu Perfil",
           tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
