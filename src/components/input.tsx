@@ -3,15 +3,7 @@ import { Text, TextProps, View, ViewProps, TextInput } from "react-native";
 
 function Input({ children }: TextProps) {
   return (
-    <View
-      style={{
-        backgroundColor: "#2a2b2d",
-        display: "flex",
-        flexDirection: "row",
-        width: "auto",
-      }}
-      className="w-full h-14 bg-gray-800 rounded-lg p-4 flex-row items-center gap-4"
-    >
+    <View className="w-full h-14 bg-green-800 rounded-lg p-4 flex-row items-center gap-4">
       {children}
     </View>
   );

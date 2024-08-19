@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 export default function ProfileScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Meu perfil</Text>
+      <Text className="text-red-500 text-2xl">Meu perfil</Text>
     </View>
   );
 }
