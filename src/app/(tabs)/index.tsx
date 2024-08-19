@@ -1,12 +1,9 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 
-import EditScreenInfo from "../../components/EditScreenInfo";
-import { Text, View } from "../../components/Themed";
-
-export default function TabOneScreen() {
+export default function Home() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Inicio</Text>
+      <Text className="text-red-500 text-2xl">Inicio</Text>
     </View>
   );
 }

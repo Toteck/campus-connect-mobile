@@ -1,29 +1,16 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
-import EditScreenInfo from "../../components/EditScreenInfo";
-import { Text, View } from "../../components/Themed";
+import { Input } from "@/components/input";
+import { MaterialIcons } from "@expo/vector-icons";
+import { colors } from "@/styles/colors";
 
 export default function SearchScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tela de Buscar Eventos</Text>
+    <View className="flex-1 bg-gray-900 pt-14 p-4">
+      <Input>
+        <MaterialIcons name="search" size={22} color={colors.white} />
+        <Input.Field />
+      </Input>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-});

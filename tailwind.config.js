@@ -3,7 +3,8 @@ import { fontFamily } from "./src/styles/font-family";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./src/**/*.{ts, tsx}"],
+  // NOTE: Update this to include the paths to all of your component files.
+  content: ["./src/**/*.{ts,tsx}"],
   presets: [require("nativewind/preset")],
   theme: {
     extend: { colors, fontFamily },
