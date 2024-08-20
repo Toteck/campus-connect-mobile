@@ -1,26 +1,63 @@
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, SafeAreaView } from "react-native";
+import { PostCard } from "@/components/postCard";
+import {
+  Actionsheet,
+  Badge,
+  Box,
+  Button,
+  FlatList,
+  HStack,
+  useDisclose,
+  Text,
+  View,
+} from "native-base";
+import Header from "@/components/header";
+import { mockPosts } from "@/data/mockPosts";
 
 export default function Home() {
+  const { isOpen, onOpen, onClose } = useDisclose();
   return (
-    <View style={styles.container}>
-      <Text className="text-red-500 text-2xl">Inicio</Text>
-    </View>
+    <SafeAreaView style={styles.scrollViewArea}>
+      <Box flex={1} alignItems="center" justifyContent="flex-start">
+        <Header onOpen={onOpen} />
+        <FlatList
+          data={mockPosts}
+          renderItem={({ item }) => <PostCard item={item} />}
+          lineHeight={24}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+          keyExtractor={(item) => item.id}
+          showsVerticalScrollIndicator={false}
+        />
+      </Box>
+      <Actionsheet isOpen={isOpen} onClose={onClose}>
+        <Actionsheet.Content>
+          <Box w="100%" h={60} px={4} justifyContent="center">
+            <Text fontSize="16" color="fuchsia.800" mb={4}>
+              Selecione um Filtro
+            </Text>
+            <HStack justifyContent="flex-start">
+              <Button variant="ghost">
+                <Badge colorScheme="success">NODE JS</Badge>
+              </Button>
+              <Button variant="ghost">
+                <Badge colorScheme="danger">REACT JS</Badge>
+              </Button>
+            </HStack>
+          </Box>
+        </Actionsheet.Content>
+      </Actionsheet>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  scrollViewArea: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    paddingTop: 45,
+    paddingHorizontal: 4,
   },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
+
   separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
+    height: 32,
   },
 });
