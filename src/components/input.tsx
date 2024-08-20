@@ -1,25 +1,56 @@
 import { colors } from "@/styles/colors";
-import { Text, TextProps, View, ViewProps, TextInput } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
+import {
+  Input as NativeBaseInput,
+  IInputProps,
+  Icon,
+  IModalProps,
+} from "native-base";
 
-function Input({ children }: TextProps) {
-  return (
-    <View className="w-full h-14 bg-green-800 rounded-lg p-4 flex-row items-center gap-4">
-      {children}
-    </View>
-  );
-}
+import {
+  Button,
+  Modal,
+  Center,
+  FormControl,
+  NativeBaseProvider,
+  Select,
+  CheckIcon,
+  VStack,
+  HStack,
+  Box,
+} from "native-base";
 
-function InputField({ ...rest }: TextProps) {
+type InputProps = IInputProps & {
+  setShowModal: (value: boolean) => void;
+  setCategory: (value: string) => void;
+  showModal?: boolean;
+  category: string;
+};
+
+export function Input({
+  setShowModal,
+  showModal = false,
+  category,
+  setCategory,
+  ...rest
+}: InputProps) {
   return (
-    <TextInput
+    <NativeBaseInput
       placeholder="Pesquisar eventos"
-      placeholderTextColor={colors.gray[400]}
-      cursorColor={colors.blue[600]}
-      className="flex-1 font-normal text-base text-white"
+      variant="filled"
+      width="100%"
+      bg="green.800"
+      borderRadius="10"
+      py="3"
+      px="2"
+      InputLeftElement={
+        <Icon
+          ml="2"
+          size="5"
+          color="white"
+          as={<MaterialIcons name="search" />}
+        />
+      }
     />
   );
 }
-
-Input.Field = InputField;
-
-export { Input };

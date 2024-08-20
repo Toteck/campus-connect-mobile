@@ -3,6 +3,7 @@ import "@/styles/global.css";
 import { View } from "react-native";
 import { Slot } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { Box, NativeBaseProvider } from "native-base";
 import {
   useFonts,
   Roboto_400Regular,
@@ -42,9 +43,9 @@ export default function Layout() {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <NativeBaseProvider>
       <StatusBar style="dark" />
       <Slot />
-    </View>
+    </NativeBaseProvider>
   );
 }
