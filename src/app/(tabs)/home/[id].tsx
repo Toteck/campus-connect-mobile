@@ -1,4 +1,5 @@
-import { useRouter, useLocalSearchParams } from "expo-router";
+import React from "react";
+import { useLocalSearchParams } from "expo-router";
 import {
   Box,
   Heading,
@@ -13,7 +14,8 @@ import {
   StatusBar,
   Button,
 } from "native-base";
-export default function AboutPost() {
+import { useRouter } from "expo-router";
+export default function PostDetails() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
 

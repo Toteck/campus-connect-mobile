@@ -1,9 +1,8 @@
 import "@/styles/global.css";
 
-import { View } from "react-native";
-import { Slot } from "expo-router";
+import { Slot, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { Box, NativeBaseProvider } from "native-base";
+import { NativeBaseProvider } from "native-base";
 import {
   useFonts,
   Roboto_400Regular,
@@ -45,7 +44,9 @@ export default function Layout() {
   return (
     <NativeBaseProvider>
       <StatusBar style="dark" />
-      <Slot />
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack>
     </NativeBaseProvider>
   );
 }

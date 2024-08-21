@@ -7,10 +7,23 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
+        tabBarStyle: {
+          borderTopWidth: 0,
+          minHeight: 74,
+        },
+        tabBarItemStyle: {
+          paddingTop: 14,
+          paddingBottom: 14,
+        },
+
+        tabBarActiveTintColor: colors.green[500],
+        tabBarInactiveTintColor: colors.gray[400],
       }}
     >
+      <Tabs.Screen name="index" options={{ href: null }} />
+
       <Tabs.Screen
-        name="index"
+        name="home"
         options={{
           title: "Inicio",
           tabBarIcon: ({ size, color }) => (

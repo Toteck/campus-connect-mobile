@@ -12,7 +12,7 @@ import {
   Alert,
 } from "native-base";
 
-import { useRouter, Link } from "expo-router";
+import { useRouter, Link, useLocalSearchParams } from "expo-router";
 import { Post } from "@/types/post";
 
 interface PostCardProps {
@@ -22,8 +22,10 @@ interface PostCardProps {
 export function PostCard({ item }: PostCardProps) {
   const router = useRouter();
 
+  const { id } = item;
+
   const goToPost = () => {
-    router.push("/");
+    router.push(`/home/${id}`);
   };
   return (
     <Box
