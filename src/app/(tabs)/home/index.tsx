@@ -19,7 +19,7 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.scrollViewArea}>
       <Box flex={1} alignItems="center" justifyContent="flex-start">
-        <Header onOpen={onOpen} />
+        <Header />
         <FlatList
           data={mockPosts}
           renderItem={({ item }) => <PostCard item={item} />}

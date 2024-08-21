@@ -6,3 +6,9 @@ export interface Post {
   tag: string;
   createdAt: string;
 }
+
+export interface Notification {
+  id: string;
+  title: string;
+  subtitle: string;
+}

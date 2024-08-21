@@ -14,6 +14,7 @@ import {
 
 import { useRouter, Link, useLocalSearchParams } from "expo-router";
 import { Post } from "@/types/post";
+import { colors } from "@/styles/colors";
 
 interface PostCardProps {
   item: Post;
@@ -29,7 +30,7 @@ export function PostCard({ item }: PostCardProps) {
   };
   return (
     <Box
-      maxW="80"
+      maxW="96"
       rounded="lg"
       overflow="hidden"
       borderColor="coolGray.200"
@@ -96,7 +97,9 @@ export function PostCard({ item }: PostCardProps) {
             </Text>
           </HStack>
 
-          <Button onPress={goToPost}>Ver mais...</Button>
+          <Button bgColor={colors.green[600]} onPress={goToPost}>
+            Ver mais...
+          </Button>
         </HStack>
       </Stack>
     </Box>
