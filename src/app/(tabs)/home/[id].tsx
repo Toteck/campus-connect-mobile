@@ -15,8 +15,11 @@ import {
   Button,
 } from "native-base";
 import { useRouter } from "expo-router";
+import { mockPosts } from "@/data/mockPosts";
 export default function PostDetails() {
   const { id } = useLocalSearchParams();
+
+  const post = mockPosts.filter((post) => post.id === id)[0];
   const router = useRouter();
 
   return (
@@ -53,52 +56,17 @@ export default function PostDetails() {
           px="3"
           py="1.5"
         >
-          TAG
+          {post.tag}
         </Center>
       </Box>
       <VStack mt={4} px={4}>
         <HStack>
-          <Heading mb={4}>Title of post</Heading>
+          <VStack>
+            <Text>{post.createdAt}</Text>
+            <Heading mb={4}>{post.title}</Heading>
+          </VStack>
         </HStack>
-        <Text mb={4}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo non ea,
-          debitis odit commodi saepe. Recusandae incidunt ducimus dolore,
-          impedit temporibus necessitatibus quia! Cum possimus, similique
-          deleniti sequi blanditiis aliquam.
-        </Text>
-        <Text mb={4}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo non ea,
-          debitis odit commodi saepe. Recusandae incidunt ducimus dolore,
-          impedit temporibus necessitatibus quia! Cum possimus, similique
-          deleniti sequi blanditiis aliquam.
-        </Text>
-        <Text mb={4}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo non ea,
-          debitis odit commodi saepe. Recusandae incidunt ducimus dolore,
-          impedit temporibus necessitatibus quia! Cum possimus, similique
-          deleniti sequi blanditiis aliquam.Lorem ipsum dolor sit amet
-          consectetur adipisicing elit. Quo non ea, debitis odit commodi saepe.
-          Recusandae incidunt ducimus dolore, impedit temporibus necessitatibus
-          quia! Cum possimus, similique deleniti sequi blanditiis aliquam.
-        </Text>
-        <Text mb={4}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo non ea,
-          debitis odit commodi saepe. Recusandae incidunt ducimus dolore,
-          impedit temporibus necessitatibus quia! Cum possimus, similique
-          deleniti sequi blanditiis aliquam.Lorem ipsum dolor sit amet
-          consectetur adipisicing elit. Quo non ea, debitis odit commodi saepe.
-          Recusandae incidunt ducimus dolore, impedit temporibus necessitatibus
-          quia! Cum possimus, similique deleniti sequi blanditiis aliquam.
-        </Text>
-        <Text mb={4}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo non ea,
-          debitis odit commodi saepe. Recusandae incidunt ducimus dolore,
-          impedit temporibus necessitatibus quia! Cum possimus, similique
-          deleniti sequi blanditiis aliquam.Lorem ipsum dolor sit amet
-          consectetur adipisicing elit. Quo non ea, debitis odit commodi saepe.
-          Recusandae incidunt ducimus dolore, impedit temporibus necessitatibus
-          quia! Cum possimus, similique deleniti sequi blanditiis aliquam.
-        </Text>
+        <Text mb={4}>{post.description}</Text>
       </VStack>
     </ScrollView>
   );
