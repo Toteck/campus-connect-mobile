@@ -10,12 +10,19 @@ import {
   Center,
   Button,
 } from "native-base";
+import { Redirect, useRouter } from "expo-router";
 
 export default function ProfileScreen() {
   const [selectedProfile, setSelectedProfile] = useState("");
   const [selectedModalidade, setSelectedModalidade] = useState("");
   const [selectedCurso, setSelectedCurso] = useState("");
   const [selectedTurma, setSelectedTurma] = useState("");
+
+  const router = useRouter();
+
+  const goToLogin = () => {
+    router.replace("/(auth)/login");
+  };
 
   return (
     <Center flex={1} p={4}>
@@ -121,7 +128,9 @@ export default function ProfileScreen() {
           </>
         )}
       </VStack>
-      <Button bgColor={"red.500"}>Sair</Button>
+      <Button bgColor={"red.500"} onPress={goToLogin}>
+        Sair
+      </Button>
     </Center>
   );
 }
