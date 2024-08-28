@@ -2,9 +2,11 @@ import { useAuth } from "@/context/AuthContext";
 import { Redirect, Stack } from "expo-router";
 
 export default function HomeStack() {
-  const { isAuthenticated, loading } = useAuth();
+  const { getToken, isAuthenticated, loading } = useAuth();
 
-  if (!isAuthenticated) {
+  const token = getToken();
+
+  if (!token) {
     return <Redirect href={"/(auth)/login"} />;
   }
 

@@ -14,6 +14,7 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { useAuth } from "@/context/AuthContext";
 
 type RegisterFormInputs = {
   username: string;
@@ -25,6 +26,7 @@ type RegisterFormInputs = {
 const RegisterScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+  const { register, authError, isAuthenticated } = useAuth();
 
   const {
     control,
@@ -34,9 +36,11 @@ const RegisterScreen = () => {
   } = useForm<RegisterFormInputs>();
 
   const handleRegister = async (data: RegisterFormInputs) => {
-    // Lógica de requisição para registrar o usuário
-    // Por exemplo: axios.post('/api/register', data);
-    console.log(data);
+    const success = await register(data.username, data.email, data.password);
+
+    if (success) {
+      router.replace("/(tabs)/home");
+    }
   };
 
   return (

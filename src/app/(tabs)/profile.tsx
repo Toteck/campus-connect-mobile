@@ -10,7 +10,8 @@ import {
   Center,
   Button,
 } from "native-base";
-import { Redirect, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
+import { useAuth } from "@/context/AuthContext";
 
 export default function ProfileScreen() {
   const [selectedProfile, setSelectedProfile] = useState("");
@@ -20,7 +21,10 @@ export default function ProfileScreen() {
 
   const router = useRouter();
 
+  const { logout, authError, isAuthenticated } = useAuth();
+
   const goToLogin = () => {
+    logout();
     router.replace("/(auth)/login");
   };
 

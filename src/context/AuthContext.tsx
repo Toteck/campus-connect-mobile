@@ -94,7 +94,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   ): Promise<boolean> => {
     try {
       const response = await fetch(
-        `${backendBaseUrl}/api/auth/local/register`,
+        `https://devblog-zkbf.onrender.com/api/auth/local/register`,
         {
           method: "POST",
           headers: {
@@ -110,7 +110,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       const responseData = await response.json();
       if (responseData.jwt) {
         setUser(responseData.user);
-        saveToken(responseData.jwt);
+        await saveToken(responseData.jwt);
         setIsAuthenticated(true);
         return true;
       } else {
@@ -124,8 +124,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   };
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    console.log(email);
-    console.log(password);
     try {
       const response = await fetch(`${backendBaseUrl}/api/auth/local`, {
         method: "POST",

@@ -14,7 +14,7 @@ import * as SplashScreen from "expo-splash-screen";
 
 import Loading from "@/components/loading";
 import React, { useEffect } from "react";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth, AuthProvider } from "@/context/AuthContext";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -29,10 +29,6 @@ export default function Layout() {
   });
 
   const { isAuthenticated, loading } = useAuth();
-
-  // if (!isAuthenticated) {
-  //   return <Redirect href={"/(auth)/login"} />;
-  // }
 
   useEffect(() => {
     if (error) throw error;
@@ -49,12 +45,14 @@ export default function Layout() {
   }
 
   return (
-    <NativeBaseProvider>
-      <StatusBar style="dark" />
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-      </Stack>
-    </NativeBaseProvider>
+    <AuthProvider>
+      <NativeBaseProvider>
+        <StatusBar style="dark" />
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+        </Stack>
+      </NativeBaseProvider>
+    </AuthProvider>
   );
 }
