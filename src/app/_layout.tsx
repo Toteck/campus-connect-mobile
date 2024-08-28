@@ -1,6 +1,6 @@
 import "@/styles/global.css";
 
-import { Slot, Stack } from "expo-router";
+import { Redirect, Slot, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { NativeBaseProvider } from "native-base";
 import {
@@ -14,6 +14,7 @@ import * as SplashScreen from "expo-splash-screen";
 
 import Loading from "@/components/loading";
 import React, { useEffect } from "react";
+import { useAuth } from "@/context/AuthContext";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -26,6 +27,12 @@ export default function Layout() {
     Roboto_500Medium,
     Roboto_700Bold,
   });
+
+  const { isAuthenticated, loading } = useAuth();
+
+  // if (!isAuthenticated) {
+  //   return <Redirect href={"/(auth)/login"} />;
+  // }
 
   useEffect(() => {
     if (error) throw error;

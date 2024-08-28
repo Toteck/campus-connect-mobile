@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { Stack } from "expo-router";
 
 export default function AuthLayout() {
@@ -8,6 +9,7 @@ export default function AuthLayout() {
       }}
     >
       <Stack.Screen name="login" />
+      <Stack.Screen name="signup" />
     </Stack>
   );
 }
