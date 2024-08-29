@@ -45,7 +45,7 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.scrollViewArea}>
       <Box flex={1} alignItems="center" justifyContent="flex-start">
-        <Header />
+        <Header title="Campus Connect" />
         {loading ? (
           <ActivityIndicator size="large" color="#0000ff" />
         ) : (

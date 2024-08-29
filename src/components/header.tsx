@@ -1,10 +1,14 @@
 import React from "react";
-import { Heading, HStack, Spacer, SearchIcon, Button } from "native-base";
+import { Heading, HStack, Spacer } from "native-base";
 
-const Header = () => {
+type HeaderProps = {
+  title: string;
+};
+
+const Header = ({ title }: HeaderProps) => {
   return (
     <HStack justifyContent="space-between" alignItems="center" maxW="96" mb={4}>
-      <Heading>Campus Connect</Heading>
+      <Heading>{title}</Heading>
       <Spacer />
     </HStack>
   );
