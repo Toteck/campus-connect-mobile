@@ -15,6 +15,7 @@ import * as SplashScreen from "expo-splash-screen";
 import Loading from "@/components/loading";
 import React, { useEffect } from "react";
 import { useAuth, AuthProvider } from "@/context/AuthContext";
+import { PostCacheProvider } from "@/context/PostCacheContext";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -46,13 +47,15 @@ export default function Layout() {
 
   return (
     <AuthProvider>
-      <NativeBaseProvider>
-        <StatusBar style="dark" />
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-        </Stack>
-      </NativeBaseProvider>
+      <PostCacheProvider>
+        <NativeBaseProvider>
+          <StatusBar style="dark" />
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          </Stack>
+        </NativeBaseProvider>
+      </PostCacheProvider>
     </AuthProvider>
   );
 }

@@ -1,9 +1,14 @@
 export interface Post {
-  id: string;
+  id: number;
   title: string;
-  description: string;
-  image: string;
+  content: string;
   tag: string;
+  cover: string;
+  anexos: Array<{
+    id: number;
+    title: string;
+    url: string;
+  }>;
   createdAt: string;
 }
 

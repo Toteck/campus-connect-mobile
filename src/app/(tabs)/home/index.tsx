@@ -1,32 +1,37 @@
 import { StyleSheet, SafeAreaView, ActivityIndicator } from "react-native";
 import { PostCard } from "@/components/postCard";
-import {
-  Actionsheet,
-  Badge,
-  Box,
-  Button,
-  FlatList,
-  HStack,
-  useDisclose,
-  Text,
-  View,
-} from "native-base";
+import { Box, FlatList, View } from "native-base";
 import Header from "@/components/header";
-import { mockPosts } from "@/data/mockPosts";
 import { useEffect, useState } from "react";
-import axios from "axios";
+
+import { Post } from "@/types/post";
 
 export default function HomeScreen() {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch("http://192.168.19.1:1337/api/posts");
+        const response = await fetch(
+          "https://devblog-zkbf.onrender.com/api/posts?fields[0]=title&fields[1]=content&populate[tag][fields][0]=name&populate[cover][fields][0]=url&populate[anexos][fields][0]=title&populate[anexos][fields][1]=url"
+        );
         const data = await response.json();
-        console.log({ data });
-        setPosts(data.data);
+
+        const extractedPosts = data.data.map((postData: any) => ({
+          id: postData.id,
+          title: postData.attributes.title,
+          content: postData.attributes.content,
+          tag: postData.attributes.tag.data.attributes.name,
+          cover: postData.attributes.cover.data[0]?.attributes.url,
+          anexos: postData.attributes.anexos.map((anexo: any) => ({
+            id: anexo.id,
+            title: anexo.title,
+            url: anexo.url,
+          })),
+        }));
+
+        setPosts(extractedPosts);
       } catch (error) {
         console.error("Erro ao buscar os posts com fetch:", error);
       } finally {
@@ -37,28 +42,18 @@ export default function HomeScreen() {
     fetchPosts();
   }, []);
 
-  // if (loading) {
-  //   return <ActivityIndicator size="large" color="#0000ff" />;
-  // }
-
   return (
     <SafeAreaView style={styles.scrollViewArea}>
       <Box flex={1} alignItems="center" justifyContent="flex-start">
         <Header />
-
         {loading ? (
-          <ActivityIndicator
-            className="flex-1 justify-center items-center"
-            size="large"
-            color="#0000ff"
-          />
+          <ActivityIndicator size="large" color="#0000ff" />
         ) : (
           <FlatList
-            data={mockPosts}
+            data={posts}
             renderItem={({ item }) => <PostCard item={item} />}
-            lineHeight={24}
             ItemSeparatorComponent={() => <View style={styles.separator} />}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.id.toString()}
             showsVerticalScrollIndicator={false}
           />
         )}
@@ -73,7 +68,6 @@ const styles = StyleSheet.create({
     paddingTop: 45,
     paddingHorizontal: 4,
   },
-
   separator: {
     height: 32,
   },
