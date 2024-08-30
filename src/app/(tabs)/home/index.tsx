@@ -1,6 +1,6 @@
 import { StyleSheet, SafeAreaView, ActivityIndicator } from "react-native";
 import { PostCard } from "@/components/postCard";
-import { Box, FlatList, View } from "native-base";
+import { Box, Center, FlatList, View } from "native-base";
 import Header from "@/components/header";
 import { useEffect, useState } from "react";
 
@@ -47,7 +47,9 @@ export default function HomeScreen() {
       <Box flex={1} alignItems="center" justifyContent="flex-start">
         <Header title="Campus Connect" />
         {loading ? (
-          <ActivityIndicator size="large" color="#0000ff" />
+          <Box flex={1} alignItems={"center"} justifyContent={"center"}>
+            <ActivityIndicator size="large" color="#00ff00" />
+          </Box>
         ) : (
           <FlatList
             data={posts}

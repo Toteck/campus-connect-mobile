@@ -80,14 +80,14 @@ export default function PostDetails() {
             alt="image"
           />
         </AspectRatio>
-        <Center bg="violet.500" position="absolute" bottom="0">
+        <Center bg="green.500" position="absolute" bottom="0">
           <Button variant="ghost" onPress={() => router.back()}>
             <ArrowBackIcon size={8} color="warmGray.50" />
             <Text color="warmGray.50">Voltar</Text>
           </Button>
         </Center>
         <Center
-          bg="violet.500"
+          bg="green.500"
           _dark={{
             bg: "violet.400",
           }}
@@ -108,11 +108,15 @@ export default function PostDetails() {
       <VStack mt={4} px={4}>
         <HStack>
           <VStack>
-            <Text>{format(new Date(post.createdAt), "dd/MM/yyyy")}</Text>
+            <Text mb={"2"}>
+              Publicado em: {format(new Date(post.createdAt), "dd/MM/yyyy")}
+            </Text>
             <Heading mb={4}>{post.title}</Heading>
           </VStack>
         </HStack>
-        <Text mb={4}>{post.content}</Text>
+        <Text mb={4} fontSize={"md"}>
+          {post.content}
+        </Text>
 
         <VStack space={3} mt={4}>
           <Heading size="md">Anexos</Heading>
