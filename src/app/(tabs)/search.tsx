@@ -33,13 +33,22 @@ export default function SearchScreen() {
     setLoading(true);
 
     try {
+      const filters: any = {
+        // Filtra por título e conteúdo de forma insensível a maiúsculas e minúsculas
+        title: { $containsi: searchQuery },
+        content: { $containsi: searchQuery },
+      };
+
+      // Se uma categoria (tag) foi selecionada, adiciona ao filtro
+      if (category) {
+        filters.tag = {
+          name: { $containsi: category },
+        };
+      }
+
       const query = qs.stringify(
         {
-          filters: {
-            // Filtra por título e conteúdo de forma insensível a maiúsculas e minúsculas
-            title: { $containsi: searchQuery },
-            content: { $containsi: searchQuery },
-          },
+          filters: filters,
           // Definindo os campos que deseja retornar
           fields: ["title", "content", "createdAt"],
           // Populando as tags e covers com seus respectivos campos
