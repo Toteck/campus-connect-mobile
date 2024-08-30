@@ -13,6 +13,8 @@ type User = {
   username: string;
   email: string;
   profile: string; // Profile could be optional.
+  createdAt: string;
+  updatedAt: string;
 };
 
 type AuthState = {

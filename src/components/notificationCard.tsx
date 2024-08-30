@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Heading, Center, Stack, Text, HStack, Button } from "native-base";
 import { useRouter } from "expo-router";
 import { Notification } from "@/types/notification";
-import { green } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface NotificationCardProps {
   item: Notification;
