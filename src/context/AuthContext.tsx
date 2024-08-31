@@ -3,18 +3,24 @@ import React, {
   createContext,
   useContext,
   PropsWithChildren,
+  useEffect,
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import axios from "axios";
 
 const backendBaseUrl = "https://devblog-zkbf.onrender.com";
 
 type User = {
-  id: string; // Consider adding an 'id' for the user.
+  id: number; // Alterado para number
   username: string;
   email: string;
-  profile: string; // Profile could be optional.
+  profile: string;
   createdAt: string;
   updatedAt: string;
+  blocked: boolean;
+  confirmed: boolean;
+  provider: string;
 };
 
 type AuthState = {
@@ -55,6 +61,40 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authError, setAuthError] = useState("");
+
+  useEffect(() => {
+    const loadStorageData = async () => {
+      try {
+        const storedUser = await AsyncStorage.getItem("user");
+        const storedToken = await AsyncStorage.getItem("authToken");
+
+        if (storedUser && storedToken) {
+          setUser(JSON.parse(storedUser));
+          setToken(storedToken);
+          setIsAuthenticated(true);
+        }
+      } catch (error) {
+        console.error("Error loading storage data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadStorageData();
+  }, []);
+
+  const saveUser = async (user: User | null) => {
+    try {
+      if (user) {
+        await AsyncStorage.setItem("user", JSON.stringify(user));
+      } else {
+        await AsyncStorage.removeItem("user");
+      }
+      setUser(user);
+    } catch (error) {
+      console.error("Error saving user:", error);
+    }
+  };
 
   const saveToken = async (token: string | null) => {
     try {
@@ -111,7 +151,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       );
       const responseData = await response.json();
       if (responseData.jwt) {
-        setUser(responseData.user);
+        await saveUser(responseData.user);
         await saveToken(responseData.jwt);
         setIsAuthenticated(true);
         return true;
@@ -127,20 +167,15 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      const response = await fetch(`${backendBaseUrl}/api/auth/local`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          identifier: email,
-          password: password,
-        }),
+      const response = await axios.post(`${backendBaseUrl}/api/auth/local`, {
+        identifier: email,
+        password: password,
       });
-      const responseData = await response.json();
-      if (responseData.jwt) {
-        setUser(responseData.user);
-        saveToken(responseData.jwt);
+      const responseData = response.data;
+
+      if (responseData?.user && responseData?.jwt) {
+        await saveUser(responseData.user);
+        await saveToken(responseData.jwt);
         setIsAuthenticated(true);
         return true;
       } else {

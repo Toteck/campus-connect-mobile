@@ -5,6 +5,7 @@ import Header from "@/components/header";
 import { useEffect, useState } from "react";
 
 import { Post } from "@/types/post";
+import { useAuth } from "@/context/AuthContext";
 
 export default function HomeScreen() {
   const [posts, setPosts] = useState<Post[]>([]);

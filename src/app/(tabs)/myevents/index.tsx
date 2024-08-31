@@ -12,9 +12,7 @@ export default function MyEventsScreen() {
   const [events, setEvents] = useState<Notification[]>([]);
   const [newEventsCount, setNewEventsCount] = useState(0);
 
-  const { getToken } = useAuth();
-
-  const token = getToken();
+  const { user } = useAuth();
 
   useEffect(() => {
     fetchEvents();
@@ -26,7 +24,7 @@ export default function MyEventsScreen() {
         "lastViewedTimestamp"
       );
       const response = await axios.get(
-        `https://devblog-zkbf.onrender.com/api/posts?filters[publico_alvo][$eq]=Estudante`
+        `https://devblog-zkbf.onrender.com/api/posts?filters[publico_alvo][$eq]=${user?.profile}&sort=createdAt:desc`
       );
 
       const fetchedEvents = response.data.data.map((event: any) => ({
