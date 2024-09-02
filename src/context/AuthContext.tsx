@@ -11,6 +11,32 @@ import axios from "axios";
 
 const backendBaseUrl = "https://devblog-zkbf.onrender.com";
 
+type Modality = {
+  id: number;
+  name: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+  slug: string;
+};
+
+type Course = {
+  id: number;
+  description: string;
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
+  name: string;
+};
+
+type Classroom = {
+  id: number;
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
+  name: string;
+};
+
 type User = {
   id: number; // Alterado para number
   username: string;
@@ -21,6 +47,9 @@ type User = {
   blocked: boolean;
   confirmed: boolean;
   provider: string;
+  modality?: Modality;
+  course?: Course;
+  classroom?: Classroom;
 };
 
 type AuthState = {
@@ -37,6 +66,7 @@ type AuthState = {
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   getToken: () => Promise<string | null>;
+  getUser: () => Promise<User | null>;
   clearToken: () => Promise<void>;
   saveToken: (token: string | null) => Promise<void>;
 };
@@ -50,6 +80,7 @@ const AuthContext = createContext<AuthState>({
   register: async () => false,
   login: async () => false,
   logout: () => {},
+  getUser: async () => null,
   getToken: async () => null,
   clearToken: async () => {},
   saveToken: async () => {},
@@ -106,6 +137,36 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       setToken(token);
     } catch (error) {
       console.error("Error saving token:", error);
+    }
+  };
+
+  const getUser = async () => {
+    try {
+      const authToken = await getToken();
+
+      if (!authToken) {
+        throw new Error("No token found");
+      }
+
+      const response = await axios.get(
+        backendBaseUrl + "/api/users/me?populate=*",
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+
+      // Aqui você pode tratar a resposta e atualizar o estado do usuário
+      const userData = response.data;
+
+      await saveUser(userData);
+      setUser(userData); // Se você quiser armazenar o usuário no estado
+
+      return user;
+    } catch (error) {
+      console.error("Error getting user:", error);
+      return null;
     }
   };
 
@@ -202,6 +263,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         loading,
         isAuthenticated,
         authError,
+        getUser,
         register,
         login,
         logout,

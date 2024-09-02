@@ -21,7 +21,7 @@ export default function ProfileScreen() {
 
   const router = useRouter();
 
-  const { logout, authError, isAuthenticated } = useAuth();
+  const { logout, user } = useAuth();
 
   const goToLogin = () => {
     logout();
@@ -38,7 +38,10 @@ export default function ProfileScreen() {
           alt="Profile Image"
         />
         <Text fontSize="xl" fontWeight="bold">
-          Mateus
+          {user?.username}
+        </Text>
+        <Text fontSize="xl" fontWeight="bold">
+          {user?.profile}
         </Text>
         <Divider my={4} />
         <Text textAlign="center" fontSize="md">
@@ -56,7 +59,7 @@ export default function ProfileScreen() {
           onValueChange={(value) => setSelectedProfile(value)}
         >
           <Select.Item
-            label="Pai/Mãe/Responsável legal de estudante da instituição"
+            label="Responsável legal por estudante"
             value="responsavel"
           />
           <Select.Item label="Estudante" value="estudante" />

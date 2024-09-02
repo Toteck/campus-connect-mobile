@@ -7,6 +7,7 @@ import Header from "@/components/header";
 import { NotificationCard } from "@/components/notificationCard";
 import { Notification } from "@/types/notification";
 import { useAuth } from "@/context/AuthContext";
+import qs from "qs";
 
 export default function MyEventsScreen() {
   const [events, setEvents] = useState<Notification[]>([]);
@@ -23,8 +24,29 @@ export default function MyEventsScreen() {
       const lastViewedTimestamp = await AsyncStorage.getItem(
         "lastViewedTimestamp"
       );
+
+      // Inicia o filtro de busca pelo perfil do usuário
+
+      let query = `filters[publico_alvo][$eq]=${user?.profile}`;
+
+      //Verifica se o usuário tem modalidade, curso e turma e adiciona aos filtros
+
+      if (user?.modality?.slug) {
+        query += `&filters[course_modalities][slug][$eq]=${user?.modality?.slug}`;
+      }
+
+      if (user?.course?.slug) {
+        query += `&filters[courses][slug][$eq]=${user?.course?.slug}`;
+      }
+
+      if (user?.classroom?.slug) {
+        query += `&filters[classrooms][slug][$eq]=${user?.classroom?.slug}`;
+      }
+
+      // Faz a requisição à API com a query string gerada
+      console.log({ query });
       const response = await axios.get(
-        `https://devblog-zkbf.onrender.com/api/posts?filters[publico_alvo][$eq]=${user?.profile}&sort=createdAt:desc`
+        `https://devblog-zkbf.onrender.com/api/posts?sort[0]=createdAt:desc&${query}`
       );
 
       const fetchedEvents = response.data.data.map((event: any) => ({
