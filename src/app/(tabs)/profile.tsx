@@ -8,6 +8,10 @@ import {
   VStack,
   Center,
   Button,
+  Alert,
+  HStack,
+  IconButton,
+  CloseIcon,
 } from "native-base";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/context/AuthContext";
@@ -60,6 +64,9 @@ export default function ProfileScreen() {
   const [cursos, setCursos] = useState<{ label: string; value: number }[]>([]);
   const [turmas, setTurmas] = useState<{ label: string; value: number }[]>([]);
   const [isEditing, setIsEditing] = useState(false);
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [alertType, setAlertType] = useState<"success" | "error">("success");
+  const [alertMessage, setAlertMessage] = useState<string>("");
 
   const selectedModalidade = watch("modalidade");
   const selectedCurso = watch("curso");
@@ -127,7 +134,6 @@ export default function ProfileScreen() {
   }, [selectedCurso]);
 
   const onSubmit = (data: any) => {
-    console.log({ data });
     const updateData = {
       classroom: data.turma,
       course: data.curso,
@@ -145,16 +151,26 @@ export default function ProfileScreen() {
         }
       )
       .then((response) => {
-        console.log("Perfil atualizado com sucesso:", response.data);
+        setAlertType("success");
+        setAlertMessage("Perfil atualizado com sucesso!");
+        setShowAlert(true);
+        // Sai do modo edição após salvar
+        setIsEditing(false);
       })
       .catch((error) => {
-        console.error("Erro ao atualizar perfil:", error);
+        setAlertType("error");
+        setAlertMessage("Erro ao atualizar perfil.");
+        setShowAlert(true);
       });
   };
 
   const goToLogin = () => {
     logout();
     router.replace("/(auth)/login");
+  };
+
+  const getSelectedText = (label: string, value?: string | number) => {
+    return value ? `${label}: ${value}` : `${label}: Não selecionado`;
   };
 
   // Verifica se todos os campos estão preenchidos
@@ -176,9 +192,14 @@ export default function ProfileScreen() {
         </Text>
 
         {!isEditing && (
-          <Button bgColor={"blue.500"} onPress={() => setIsEditing(true)}>
-            Editar Modalidade, Curso e Turma
-          </Button>
+          <>
+            <Text>{getSelectedText("Modalidade", selectedModalidade)}</Text>
+            <Text>{getSelectedText("Curso", selectedCurso)}</Text>
+            <Text>{getSelectedText("Turma", selectedTurma)}</Text>
+            <Button bgColor={"blue.500"} onPress={() => setIsEditing(true)}>
+              Editar Modalidade, Curso e Turma
+            </Button>
+          </>
         )}
 
         {isEditing && (
@@ -263,6 +284,38 @@ export default function ProfileScreen() {
         <Button bgColor={"red.500"} onPress={goToLogin}>
           Sair
         </Button>
+
+        {showAlert && (
+          <Alert
+            w="100%"
+            status={alertType}
+            action={
+              <IconButton
+                icon={<CloseIcon size="xs" />}
+                onPress={() => setShowAlert(false)}
+              />
+            }
+            actionProps={{
+              alignSelf: "center",
+            }}
+          >
+            <VStack space={2} flexShrink={1} w="100%">
+              <HStack
+                flexShrink={1}
+                space={2}
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <HStack space={2} flexShrink={1} alignItems="center">
+                  <Alert.Icon />
+                  <Text fontSize="md" fontWeight="medium" flexShrink={1}>
+                    {alertMessage}
+                  </Text>
+                </HStack>
+              </HStack>
+            </VStack>
+          </Alert>
+        )}
       </VStack>
     </Center>
   );
