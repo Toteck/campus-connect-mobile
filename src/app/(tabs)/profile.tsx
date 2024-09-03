@@ -10,7 +10,7 @@ import {
   Button,
 } from "native-base";
 import { useRouter } from "expo-router";
-import { useAuth, User } from "@/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 
@@ -47,10 +47,18 @@ type Classroom = {
 };
 
 export default function ProfileScreen() {
-  const { control, handleSubmit, watch, setValue } = useForm();
-  const [modalidades, setModalidades] = useState<Modality[]>([]);
-  const [cursos, setCursos] = useState<Course[]>([]);
-  const [turmas, setTurmas] = useState<Classroom[]>([]);
+  const {
+    control,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm();
+  const [modalidades, setModalidades] = useState<
+    { label: string; value: number }[]
+  >([]);
+  const [cursos, setCursos] = useState<{ label: string; value: number }[]>([]);
+  const [turmas, setTurmas] = useState<{ label: string; value: number }[]>([]);
 
   const selectedModalidade = watch("modalidade");
   const selectedCurso = watch("curso");
@@ -60,7 +68,6 @@ export default function ProfileScreen() {
   const router = useRouter();
 
   useEffect(() => {
-    // Fetch Modalidades from Strapi
     axios
       .get("https://devblog-zkbf.onrender.com/api/course-modalities/")
       .then((response) => {
@@ -77,7 +84,6 @@ export default function ProfileScreen() {
 
   useEffect(() => {
     if (selectedModalidade) {
-      // Fetch Cursos based on selected Modalidade
       axios
         .get(
           `https://devblog-zkbf.onrender.com/api/course-modalities/${selectedModalidade}?populate=courses`
@@ -100,7 +106,6 @@ export default function ProfileScreen() {
 
   useEffect(() => {
     if (selectedCurso) {
-      // Fetch Turmas based on selected Curso
       axios
         .get(
           `https://devblog-zkbf.onrender.com/api/courses/${selectedCurso}?populate=classrooms`
@@ -151,6 +156,9 @@ export default function ProfileScreen() {
     router.replace("/(auth)/login");
   };
 
+  // Verifica se todos os campos estão preenchidos
+  const isFormValid = selectedModalidade && selectedCurso && selectedTurma;
+
   return (
     <Center flex={1} p={4}>
       <VStack space={4} alignItems="center">
@@ -185,6 +193,9 @@ export default function ProfileScreen() {
             />
           ))}
         </Select>
+        {errors.modalidade && (
+          <Text color="red.500">Modalidade é obrigatória.</Text>
+        )}
 
         <Select
           selectedValue={selectedCurso}
@@ -206,6 +217,7 @@ export default function ProfileScreen() {
             />
           ))}
         </Select>
+        {errors.curso && <Text color="red.500">Curso é obrigatório.</Text>}
 
         <Select
           selectedValue={selectedTurma}
@@ -227,8 +239,13 @@ export default function ProfileScreen() {
             />
           ))}
         </Select>
+        {errors.turma && <Text color="red.500">Turma é obrigatória.</Text>}
 
-        <Button bgColor={"blue.500"} onPress={handleSubmit(onSubmit)}>
+        <Button
+          bgColor={isFormValid ? "blue.500" : "gray.400"}
+          onPress={handleSubmit(onSubmit)}
+          isDisabled={!isFormValid}
+        >
           Salvar
         </Button>
         <Button bgColor={"red.500"} onPress={goToLogin}>
