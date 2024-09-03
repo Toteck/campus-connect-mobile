@@ -235,8 +235,19 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       const responseData = response.data;
 
       if (responseData?.user && responseData?.jwt) {
-        await saveUser(responseData.user);
         await saveToken(responseData.jwt);
+        const responseWithAcademicInfo = await axios.get(
+          backendBaseUrl + "/api/users/me?populate=*",
+          {
+            headers: {
+              Authorization: `Bearer ${responseData.jwt}`,
+            },
+          }
+        );
+
+        const user = responseWithAcademicInfo.data;
+
+        await saveUser(user);
         setIsAuthenticated(true);
         return true;
       } else {

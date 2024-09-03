@@ -223,9 +223,19 @@ export default function ProfileScreen() {
 
         {!isEditing && (
           <>
-            <Text>{getSelectedText("Modalidade", selectedModalidadeName)}</Text>
-            <Text>{getSelectedText("Curso", selectedCursoName)}</Text>
-            <Text>{getSelectedText("Turma", selectedTurmaName)}</Text>
+            <Text>
+              Modalidade:{" "}
+              {user?.modality ? user?.modality?.name : "Não selecionado"}
+            </Text>
+            <Text>
+              {" "}
+              Curso: {user?.course ? user?.course?.name : "Não selecionado"}
+            </Text>
+            <Text>
+              {" "}
+              Turma:{" "}
+              {user?.classroom ? user?.classroom?.name : "Não selecionado"}
+            </Text>
             <Button bgColor={"blue.500"} onPress={() => setIsEditing(true)}>
               Editar Modalidade, Curso e Turma
             </Button>
