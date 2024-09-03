@@ -37,7 +37,7 @@ type Classroom = {
   name: string;
 };
 
-type User = {
+export type User = {
   id: number; // Alterado para number
   username: string;
   email: string;

@@ -44,7 +44,7 @@ export default function MyEventsScreen() {
       }
 
       // Faz a requisição à API com a query string gerada
-      console.log({ query });
+
       const response = await axios.get(
         `https://devblog-zkbf.onrender.com/api/posts?sort[0]=createdAt:desc&${query}`
       );
