@@ -68,6 +68,11 @@ export default function ProfileScreen() {
   const [alertType, setAlertType] = useState<"success" | "error">("success");
   const [alertMessage, setAlertMessage] = useState<string>("");
 
+  const [selectedModalidadeName, setSelectedModalidadeName] =
+    useState<string>("");
+  const [selectedCursoName, setSelectedCursoName] = useState<string>("");
+  const [selectedTurmaName, setSelectedTurmaName] = useState<string>("");
+
   const selectedModalidade = watch("modalidade");
   const selectedCurso = watch("curso");
   const selectedTurma = watch("turma");
@@ -92,6 +97,13 @@ export default function ProfileScreen() {
 
   useEffect(() => {
     if (selectedModalidade) {
+      const selectedModalidadeObj = modalidades.find(
+        (modalidade) => modalidade.value === selectedModalidade
+      );
+      if (selectedModalidadeObj) {
+        setSelectedModalidadeName(selectedModalidadeObj.label);
+      }
+
       axios
         .get(
           `https://devblog-zkbf.onrender.com/api/course-modalities/${selectedModalidade}?populate=courses`
@@ -114,6 +126,13 @@ export default function ProfileScreen() {
 
   useEffect(() => {
     if (selectedCurso) {
+      const selectedCursoObj = cursos.find(
+        (curso) => curso.value === selectedCurso
+      );
+      if (selectedCursoObj) {
+        setSelectedCursoName(selectedCursoObj.label);
+      }
+
       axios
         .get(
           `https://devblog-zkbf.onrender.com/api/courses/${selectedCurso}?populate=classrooms`
@@ -132,6 +151,17 @@ export default function ProfileScreen() {
         .catch((error) => console.error(error));
     }
   }, [selectedCurso]);
+
+  useEffect(() => {
+    if (selectedTurma) {
+      const selectedTurmaObj = turmas.find(
+        (turma) => turma.value === selectedTurma
+      );
+      if (selectedTurmaObj) {
+        setSelectedTurmaName(selectedTurmaObj.label);
+      }
+    }
+  }, [selectedTurma]);
 
   const onSubmit = (data: any) => {
     const updateData = {
@@ -169,7 +199,7 @@ export default function ProfileScreen() {
     router.replace("/(auth)/login");
   };
 
-  const getSelectedText = (label: string, value?: string | number) => {
+  const getSelectedText = (label: string, value?: string) => {
     return value ? `${label}: ${value}` : `${label}: Não selecionado`;
   };
 
@@ -193,9 +223,9 @@ export default function ProfileScreen() {
 
         {!isEditing && (
           <>
-            <Text>{getSelectedText("Modalidade", selectedModalidade)}</Text>
-            <Text>{getSelectedText("Curso", selectedCurso)}</Text>
-            <Text>{getSelectedText("Turma", selectedTurma)}</Text>
+            <Text>{getSelectedText("Modalidade", selectedModalidadeName)}</Text>
+            <Text>{getSelectedText("Curso", selectedCursoName)}</Text>
+            <Text>{getSelectedText("Turma", selectedTurmaName)}</Text>
             <Button bgColor={"blue.500"} onPress={() => setIsEditing(true)}>
               Editar Modalidade, Curso e Turma
             </Button>
@@ -271,52 +301,44 @@ export default function ProfileScreen() {
             </Select>
             {errors.turma && <Text color="red.500">Turma é obrigatória.</Text>}
 
-            <Button
-              bgColor={isFormValid ? "blue.500" : "gray.400"}
-              onPress={handleSubmit(onSubmit)}
-              isDisabled={!isFormValid}
-            >
+            <Button isDisabled={!isFormValid} onPress={handleSubmit(onSubmit)}>
               Salvar
+            </Button>
+            <Button variant="outline" onPress={() => setIsEditing(false)}>
+              Cancelar
             </Button>
           </>
         )}
 
-        <Button bgColor={"red.500"} onPress={goToLogin}>
+        <Button onPress={goToLogin} colorScheme="red">
           Sair
         </Button>
-
-        {showAlert && (
-          <Alert
-            w="100%"
-            status={alertType}
-            action={
-              <IconButton
-                icon={<CloseIcon size="xs" />}
-                onPress={() => setShowAlert(false)}
-              />
-            }
-            actionProps={{
-              alignSelf: "center",
-            }}
-          >
-            <VStack space={2} flexShrink={1} w="100%">
-              <HStack
-                flexShrink={1}
-                space={2}
-                alignItems="center"
-                justifyContent="space-between"
-              >
-                <HStack space={2} flexShrink={1} alignItems="center">
-                  <Alert.Icon />
-                  <Text fontSize="md" fontWeight="medium" flexShrink={1}>
-                    {alertMessage}
-                  </Text>
-                </HStack>
-              </HStack>
-            </VStack>
-          </Alert>
-        )}
       </VStack>
+
+      {showAlert && (
+        <Alert w="100%" status={alertType} mt={4}>
+          <VStack space={2} flexShrink={1} w="100%">
+            <HStack
+              flexShrink={1}
+              space={2}
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <HStack space={2} flexShrink={1} alignItems="center">
+                <Alert.Icon />
+                <Text fontSize="md" color="coolGray.800">
+                  {alertMessage}
+                </Text>
+              </HStack>
+              <IconButton
+                onPress={() => setShowAlert(false)}
+                variant="unstyled"
+                icon={<CloseIcon size="3" color="coolGray.600" />}
+              />
+            </HStack>
+          </VStack>
+        </Alert>
+      )}
     </Center>
   );
 }
