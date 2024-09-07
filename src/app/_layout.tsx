@@ -16,6 +16,7 @@ import Loading from "@/components/loading";
 import React, { useEffect } from "react";
 import { useAuth, AuthProvider } from "@/context/AuthContext";
 import { PostCacheProvider } from "@/context/PostCacheContext";
+import { usePushNotifications } from "@/hooks/usePushNotifications";
 
 export {
   // Catch any errors thrown by the Layout component.

@@ -50,6 +50,7 @@ export type User = {
   modality?: Modality;
   course?: Course;
   classroom?: Classroom;
+  expoPushToken?: string;
 };
 
 type AuthState = {
@@ -69,6 +70,7 @@ type AuthState = {
   getUser: () => Promise<User | null>;
   clearToken: () => Promise<void>;
   saveToken: (token: string | null) => Promise<void>;
+  updateExpoPushToken: (expoPushToken: string) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthState>({
@@ -84,6 +86,7 @@ const AuthContext = createContext<AuthState>({
   getToken: async () => null,
   clearToken: async () => {},
   saveToken: async () => {},
+  updateExpoPushToken: async () => {},
 });
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
@@ -260,6 +263,29 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
+  const updateExpoPushToken = async (expoPushToken: string) => {
+    try {
+      if (!user || !token) {
+        throw new Error("User not authenticated");
+      }
+
+      const response = await axios.put(
+        `${backendBaseUrl}/api/users/${user.id}`,
+        { expoPushToken },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const updatedUser = { ...user, expoPushToken };
+      await saveUser(updatedUser);
+    } catch (error) {
+      console.error("Error updating Expo push token:", error);
+    }
+  };
+
   const logout = () => {
     saveToken(null);
     setUser(null);
@@ -281,6 +307,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         getToken,
         clearToken,
         saveToken,
+        updateExpoPushToken,
       }}
     >
       {children}
