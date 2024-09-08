@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "446116166417",
+    "project_id": "campusconnect-bb494",
+    "storage_bucket": "campusconnect-bb494.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:446116166417:android:2a4f6ba1dc5cdab89c6ab0",
+        "android_client_info": {
+          "package_name": "com.saiky.campusconnect"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGKedt5GXYzFKY5jI0Ltx4UraG0zaRsDU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

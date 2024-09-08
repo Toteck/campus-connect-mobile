@@ -16,6 +16,7 @@ import { useAuth } from "@/context/AuthContext";
 import axios from "axios";
 import { colors } from "@/styles/colors"; // Certifique-se que esse caminho está correto
 import { Ionicons } from "@expo/vector-icons";
+import { usePushNotifications } from "@/hooks/usePushNotifications";
 
 type LoginFormInputs = {
   email: string;
@@ -26,6 +27,8 @@ const LoginScreen = () => {
   const { login, authError, isAuthenticated } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+  const { user, updateExpoPushToken } = useAuth();
+  const { expoPushToken } = usePushNotifications();
 
   const {
     control,
@@ -43,6 +46,10 @@ const LoginScreen = () => {
     const success = await login(data.email, data.password);
 
     if (success) {
+      if (expoPushToken) {
+        const notificationToken = expoPushToken.data;
+        updateExpoPushToken(notificationToken);
+      }
       router.replace("/(tabs)/home");
     }
   };
@@ -132,6 +139,13 @@ const LoginScreen = () => {
         >
           Entrar
         </Button>
+        <Text
+          onPress={() => {
+            router.push("(auth)/forgotPassword");
+          }}
+        >
+          Esqueci minha senha
+        </Text>
         <Text fontSize="xl" fontWeight="medium" color="gray.800">
           Ainda não tem conta?
         </Text>

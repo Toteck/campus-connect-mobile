@@ -6,16 +6,6 @@ import { usePushNotifications } from "@/hooks/usePushNotifications";
 import { useEffect } from "react";
 
 export default function TabLayout() {
-  const { user, updateExpoPushToken } = useAuth();
-  const { expoPushToken } = usePushNotifications();
-
-  useEffect(() => {
-    if (user && expoPushToken) {
-      const notificationToken = expoPushToken.data;
-      updateExpoPushToken(notificationToken);
-    }
-  }, [user, expoPushToken]);
-
   return (
     <Tabs
       screenOptions={{

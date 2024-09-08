@@ -15,6 +15,7 @@ import { useForm, Controller } from "react-hook-form";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/context/AuthContext";
+import { usePushNotifications } from "@/hooks/usePushNotifications";
 
 type RegisterFormInputs = {
   username: string;
@@ -27,6 +28,8 @@ const RegisterScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const { register, authError, isAuthenticated } = useAuth();
+  const { user, updateExpoPushToken } = useAuth();
+  const { expoPushToken } = usePushNotifications();
 
   const {
     control,
@@ -39,6 +42,10 @@ const RegisterScreen = () => {
     const success = await register(data.username, data.email, data.password);
 
     if (success) {
+      if (expoPushToken) {
+        const notificationToken = expoPushToken.data;
+        updateExpoPushToken(notificationToken);
+      }
       router.replace("/(tabs)/home");
     }
   };

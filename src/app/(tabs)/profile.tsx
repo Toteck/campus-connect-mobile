@@ -80,6 +80,8 @@ export default function ProfileScreen() {
   const { logout, user, token } = useAuth();
   const router = useRouter();
 
+  console.log({ user });
+
   useEffect(() => {
     axios
       .get("https://devblog-zkbf.onrender.com/api/course-modalities/")
