@@ -13,6 +13,7 @@ import {
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useLocalSearchParams } from "expo-router";
+import { useRouter } from "expo-router";
 
 const schema = yup.object().shape({
   password: yup
@@ -28,57 +29,56 @@ const schema = yup.object().shape({
 const ResetPassword = () => {
   const { code } = useLocalSearchParams();
   //const { code } = route.params; // O token recebido no email é passado via rota
+  const router = useRouter();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
 
-  // const {
-  //   control,
-  //   handleSubmit,
-  //   formState: { errors },
-  // } = useForm({
-  //   resolver: yupResolver(schema),
-  // });
+  const handlePasswordReset = async (data: any) => {
+    const { password, confirmPassword } = data;
 
-  // const handlePasswordReset = async (data: any) => {
-  //   const { password, confirmPassword } = data;
+    try {
+      const response = await fetch(
+        "https://devblog-zkbf.onrender.com/api/auth/reset-password",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            password,
+            passwordConfirmation: confirmPassword,
+            code,
+          }),
+        }
+      );
 
-  //   try {
-  //     const response = await fetch(
-  //       "https://devblog-zkbf.onrender.com/api/auth/reset-password",
-  //       {
-  //         method: "POST",
-  //         headers: { "Content-Type": "application/json" },
-  //         body: JSON.stringify({
-  //           password,
-  //           passwordConfirmation: confirmPassword,
-  //           code,
-  //         }),
-  //       }
-  //     );
+      const responseData = await response.json();
 
-  //     const responseData = await response.json();
-
-  //     if (response.ok) {
-  //       Alert.alert("Sucesso", "Senha alterada com sucesso");
-  //       navigation.navigate("Login"); // Redireciona o usuário para a tela de login
-  //     } else {
-  //       Alert.alert(
-  //         "Erro",
-  //         responseData.error.message || "Ocorreu um erro ao alterar a senha."
-  //       );
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //     Alert.alert(
-  //       "Erro",
-  //       "Não foi possível alterar a senha. Tente novamente mais tarde."
-  //     );
-  //   }
-  // };
+      if (response.ok) {
+        Alert.alert("Sucesso", "Senha alterada com sucesso");
+        router.navigate("/(auth)/login"); // Redireciona o usuário para a tela de login
+      } else {
+        Alert.alert(
+          "Erro",
+          responseData.error.message || "Ocorreu um erro ao alterar a senha."
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert(
+        "Erro",
+        "Não foi possível alterar a senha. Tente novamente mais tarde."
+      );
+    }
+  };
 
   return (
     <Center flex={1} px={4}>
       <VStack space={4} width="100%">
-        <Text>Resetar senha</Text>
-        {/* <Text fontSize="lg" fontWeight="bold" textAlign="center">
+        <Text fontSize="lg" fontWeight="bold" textAlign="center">
           Redefinir Senha
         </Text>
 
@@ -128,7 +128,10 @@ const ResetPassword = () => {
 
         <Button onPress={handleSubmit(handlePasswordReset)} mt="2">
           Alterar senha
-        </Button> */}
+        </Button>
+        <Button onPress={() => {}} mt="2">
+          Voltar para login
+        </Button>
       </VStack>
     </Center>
   );
