@@ -11,19 +11,20 @@ import {
 } from "@expo-google-fonts/roboto";
 
 import * as SplashScreen from "expo-splash-screen";
-
 import Loading from "@/components/loading";
 import React, { useEffect } from "react";
 import { useAuth, AuthProvider } from "@/context/AuthContext";
 import { PostCacheProvider } from "@/context/PostCacheContext";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
+import { Linking } from "react-native"; // Importando o Linking
+import queryString from "query-string"; // Instale query-string, se ainda não o fez
 
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
 } from "expo-router";
 
-export default function Layout() {
+export default function Layout({ navigation }) {
   const [loaded, error] = useFonts({
     Roboto_400Regular,
     Roboto_500Medium,
@@ -31,6 +32,21 @@ export default function Layout() {
   });
 
   const { isAuthenticated, loading } = useAuth();
+
+  useEffect(() => {
+    const handleDeepLink = async (event) => {
+      const parsedUrl = queryString.parseUrl(event.url);
+      const { code } = parsedUrl.query;
+
+      navigation.navigate("(auth)/resetPassword", { code });
+    };
+
+    const subscription = Linking.addEventListener("url", handleDeepLink);
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   useEffect(() => {
     if (error) throw error;

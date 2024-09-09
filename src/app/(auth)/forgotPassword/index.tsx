@@ -103,7 +103,7 @@ export default function ForgotPassword() {
           </Text>
           <Button
             onPress={() => {
-              router.navigate("(auth)/login");
+              router.navigate("/(auth)/login");
             }}
           >
             Voltar para o login

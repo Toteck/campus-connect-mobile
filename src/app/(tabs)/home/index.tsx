@@ -15,22 +15,20 @@ export default function HomeScreen() {
     const fetchPosts = async () => {
       try {
         const response = await fetch(
-          "https://devblog-zkbf.onrender.com/api/posts?fields[0]=title&fields[1]=content&populate[tag][fields][0]=name&populate[cover][fields][0]=url&populate[anexos][fields][0]=title&populate[anexos][fields][1]=url"
+          "https://devblog-zkbf.onrender.com/api/posts?fields[0]=title&fields[1]=content&populate[tag][fields][0]=name&populate[cover][fields][0]=url"
         );
         const data = await response.json();
 
-        const extractedPosts = data.data.map((postData: any) => ({
-          id: postData.id,
-          title: postData.attributes.title,
-          content: postData.attributes.content,
-          tag: postData.attributes.tag.data.attributes.name,
-          cover: postData.attributes.cover.data[0]?.attributes.url,
-          anexos: postData.attributes.anexos.map((anexo: any) => ({
-            id: anexo.id,
-            title: anexo.title,
-            url: anexo.url,
-          })),
-        }));
+        const extractedPosts = data.data.map((postData: any) => {
+          
+          return {
+            id: postData.id,
+            title: postData.attributes.title,
+            content: postData.attributes.content,
+            tag: postData.attributes.tag.data.attributes.name,
+            cover: postData.attributes.cover.data[0]?.attributes.url,
+          };
+        });
 
         setPosts(extractedPosts);
       } catch (error) {
