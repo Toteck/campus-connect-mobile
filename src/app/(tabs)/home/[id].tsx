@@ -118,22 +118,30 @@ export default function PostDetails() {
           {post.content}
         </Text>
 
-        <VStack space={3} mt={4}>
-          <Heading size="md">Anexos</Heading>
-          {post.anexos.map((anexo) => (
-            <HStack key={anexo.id} alignItems="center" space={2}>
-              <Icon
-                as={MaterialIcons}
-                name="attach-file"
-                size="sm"
-                color="blue.500"
-              />
-              <Link href={anexo.url} isExternal _text={{ color: "blue.500" }}>
-                {anexo.title}
-              </Link>
-            </HStack>
-          ))}
-        </VStack>
+        {post.anexos.length > 0 && (
+          <>
+            <VStack space={3} mt={4}>
+              <Heading size="md">Anexos</Heading>
+              {post.anexos.map((anexo) => (
+                <HStack key={anexo.id} alignItems="center" space={2}>
+                  <Icon
+                    as={MaterialIcons}
+                    name="attach-file"
+                    size="sm"
+                    color="blue.500"
+                  />
+                  <Link
+                    href={anexo.url}
+                    isExternal
+                    _text={{ color: "blue.500" }}
+                  >
+                    {anexo.title}
+                  </Link>
+                </HStack>
+              ))}
+            </VStack>
+          </>
+        )}
       </VStack>
     </ScrollView>
   );

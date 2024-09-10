@@ -1,8 +1,17 @@
 import React, { useEffect } from "react";
-import { Box, Heading, Center, Stack, Text, HStack, Button } from "native-base";
+import {
+  Box,
+  Heading,
+  Center,
+  Stack,
+  Text,
+  HStack,
+  Button,
+  VStack,
+} from "native-base";
 import { useRouter } from "expo-router";
 import { Notification } from "@/types/notification";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { format } from "date-fns";
 
 interface NotificationCardProps {
   item: Notification;
@@ -35,7 +44,7 @@ export function NotificationCard({ item }: NotificationCardProps) {
       }}
     >
       <Stack p="4" space={3}>
-        <HStack
+        <VStack
           space={2}
           alignItems={"center"}
           justifyContent={"space-between"}
@@ -51,10 +60,16 @@ export function NotificationCard({ item }: NotificationCardProps) {
             padding={"0.5"}
             color="gray.50"
             rounded={"sm"}
+            width={"full"}
+            paddingLeft={"2"}
+            paddingTop={"2"}
+            paddingBottom={"2"}
+            textAlign={"initial"}
+            fontWeight={"semibold"}
           >
             {item.tag.toUpperCase()}
           </Text>
-        </HStack>
+        </VStack>
         <Text fontWeight="400">{item.description}</Text>
         <HStack alignItems="center" space={4} justifyContent="space-between">
           <HStack alignItems="center">
@@ -65,7 +80,7 @@ export function NotificationCard({ item }: NotificationCardProps) {
               }}
               fontWeight="400"
             >
-              {item.createdAt}
+              Publicado em: {format(new Date(item.createdAt), "dd/MM/yyyy")}
             </Text>
           </HStack>
 

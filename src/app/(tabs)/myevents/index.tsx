@@ -11,7 +11,6 @@ import qs from "qs";
 
 export default function MyEventsScreen() {
   const [events, setEvents] = useState<Notification[]>([]);
-  const [newEventsCount, setNewEventsCount] = useState(0);
 
   const { user } = useAuth();
 
@@ -63,25 +62,16 @@ export default function MyEventsScreen() {
         (event: Notification) =>
           new Date(event.createdAt) > new Date(lastViewedTimestamp || 0)
       );
-
-      setNewEventsCount(newEvents.length);
     } catch (error) {
       console.error("Erro ao buscar eventos:", error);
     }
-  };
-
-  const handleViewEvents = async () => {
-    await AsyncStorage.setItem("lastViewedTimestamp", new Date().toISOString());
-    setNewEventsCount(0);
   };
 
   return (
     <SafeAreaView style={styles.scrollViewArea}>
       <Box flex={1} alignItems="center" justifyContent="flex-start">
         <Header title="Meus eventos" />
-        <Badge colorScheme="red" rounded="full" mb={4}>
-          {newEventsCount} novos eventos
-        </Badge>
+
         <FlatList
           data={events}
           renderItem={({ item }) => <NotificationCard item={item} />}
@@ -90,7 +80,6 @@ export default function MyEventsScreen() {
           keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
         />
-        <Button onPress={handleViewEvents}>Marcar como visto</Button>
       </Box>
     </SafeAreaView>
   );

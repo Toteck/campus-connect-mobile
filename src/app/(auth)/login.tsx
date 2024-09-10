@@ -13,8 +13,6 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/context/AuthContext";
-import axios from "axios";
-import { colors } from "@/styles/colors"; // Certifique-se que esse caminho está correto
 import { Ionicons } from "@expo/vector-icons";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
 
@@ -25,8 +23,9 @@ type LoginFormInputs = {
 
 const LoginScreen = () => {
   const { login, authError, isAuthenticated, token } = useAuth();
-
   const [showPassword, setShowPassword] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const { getUser, getToken, updateExpoPushToken } = useAuth();
   const { expoPushToken } = usePushNotifications();
@@ -34,8 +33,19 @@ const LoginScreen = () => {
   const {
     control,
     handleSubmit,
-    formState: { errors },
-  } = useForm<LoginFormInputs>();
+    formState: { errors, isValid },
+    watch,
+  } = useForm<LoginFormInputs>({
+    mode: "onChange", // Isso permite a validação em tempo real
+  });
+
+  // Habilitar o botão de "Entrar" somente quando o email e a senha forem válidos
+  useEffect(() => {
+    const subscription = watch((value) => {
+      setIsButtonDisabled(!isValid || isSubmitting);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, isValid, isSubmitting]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -44,6 +54,7 @@ const LoginScreen = () => {
   }, [isAuthenticated]);
 
   const onSubmit = async (data: LoginFormInputs) => {
+    setIsSubmitting(true); // Desabilitar o botão durante a submissão
     const success = await login(data.email, data.password);
 
     if (success) {
@@ -55,6 +66,8 @@ const LoginScreen = () => {
         updateExpoPushToken(user, token, notificationToken);
       }
       router.replace("/(tabs)/home");
+    } else {
+      setIsSubmitting(false); // Reabilitar o botão em caso de erro
     }
   };
 
@@ -74,7 +87,7 @@ const LoginScreen = () => {
               required: "Email é obrigatório",
               pattern: {
                 value: /^\S+@\S+$/i,
-                message: "Invalid email address",
+                message: "Email inválido",
               },
             }}
             render={({ field: { onChange, onBlur, value } }) => (
@@ -98,7 +111,7 @@ const LoginScreen = () => {
           <Controller
             control={control}
             name="password"
-            rules={{ required: "Senha é obrigatório", minLength: 8 }}
+            rules={{ required: "Senha é obrigatória", minLength: 8 }}
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
                 placeholder="Digite sua senha"
@@ -138,11 +151,13 @@ const LoginScreen = () => {
         <Button
           mt={4}
           w="1/2"
-          colorScheme={"green"}
+          colorScheme="green"
+          isDisabled={isButtonDisabled}
           onPress={handleSubmit(onSubmit)}
         >
           Entrar
         </Button>
+
         <Text
           onPress={() => {
             router.push("/(auth)/forgotPassword");
@@ -156,7 +171,7 @@ const LoginScreen = () => {
         <Button
           mt={4}
           w="1/2"
-          colorScheme={"green"}
+          colorScheme="green"
           onPress={() => {
             router.replace("/(auth)/signup");
           }}
