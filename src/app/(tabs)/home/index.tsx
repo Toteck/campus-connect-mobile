@@ -5,7 +5,6 @@ import Header from "@/components/header";
 import { useEffect, useState } from "react";
 
 import { Post } from "@/types/post";
-import { useAuth } from "@/context/AuthContext";
 
 export default function HomeScreen() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -20,7 +19,6 @@ export default function HomeScreen() {
         const data = await response.json();
 
         const extractedPosts = data.data.map((postData: any) => {
-          
           return {
             id: postData.id,
             title: postData.attributes.title,
@@ -29,7 +27,6 @@ export default function HomeScreen() {
             cover: postData.attributes.cover.data[0]?.attributes.url,
           };
         });
-
         setPosts(extractedPosts);
       } catch (error) {
         console.error("Erro ao buscar os posts com fetch:", error);

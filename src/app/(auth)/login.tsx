@@ -27,7 +27,7 @@ const LoginScreen = () => {
   const { login, authError, isAuthenticated } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-  const { user, updateExpoPushToken } = useAuth();
+  const { getUser, getToken, updateExpoPushToken } = useAuth();
   const { expoPushToken } = usePushNotifications();
 
   const {
@@ -48,7 +48,10 @@ const LoginScreen = () => {
     if (success) {
       if (expoPushToken) {
         const notificationToken = expoPushToken.data;
-        updateExpoPushToken(notificationToken);
+        const user = await getUser();
+        const token = await getToken();
+        
+        updateExpoPushToken(user, token, notificationToken);
       }
       router.replace("/(tabs)/home");
     }

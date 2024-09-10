@@ -32,7 +32,7 @@ const RegisterScreen = () => {
   const [selectedProfile, setSelectedProfile] = useState(""); // Estado para o perfil de usuário
   const router = useRouter();
   const { register, authError, isAuthenticated } = useAuth();
-  const { user, updateExpoPushToken } = useAuth();
+  const { getUser, getToken, updateExpoPushToken } = useAuth();
   const { expoPushToken } = usePushNotifications();
 
   const {
@@ -59,7 +59,9 @@ const RegisterScreen = () => {
     if (success) {
       if (expoPushToken) {
         const notificationToken = expoPushToken.data;
-        updateExpoPushToken(notificationToken);
+        const token = await getToken();
+        const user = await getUser();
+        updateExpoPushToken(user, token, notificationToken);
       }
       router.replace("/(tabs)/home");
     }
@@ -231,8 +233,8 @@ const RegisterScreen = () => {
             mt={1}
             onValueChange={(value) => setSelectedProfile(value)}
           >
-            <Select.Item label="Estudante" value="student" />
-            <Select.Item label="Professor" value="teacher" />
+            <Select.Item label="Estudante" value="Estudante" />
+            <Select.Item label="Professor" value="Professor" />
             <Select.Item
               label="Responsável legal por estudante"
               value="Responsável legal por estudante"

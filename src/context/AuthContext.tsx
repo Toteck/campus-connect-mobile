@@ -71,7 +71,11 @@ type AuthState = {
   getUser: () => Promise<User | null>;
   clearToken: () => Promise<void>;
   saveToken: (token: string | null) => Promise<void>;
-  updateExpoPushToken: (expoPushToken: string) => Promise<void>;
+  updateExpoPushToken: (
+    user: User | null,
+    token: string | null,
+    expoPushToken: string
+  ) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthState>({
@@ -152,22 +156,18 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         throw new Error("No token found");
       }
 
-      const response = await axios.get(
-        backendBaseUrl + "/api/users/me?populate=*",
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
+      const response = await axios.get(backendBaseUrl + "/api/users/me", {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
 
       // Aqui você pode tratar a resposta e atualizar o estado do usuário
       const userData = response.data;
 
       await saveUser(userData);
       setUser(userData); // Se você quiser armazenar o usuário no estado
-
-      return user;
+      return userData;
     } catch (error) {
       console.error("Error getting user:", error);
       return null;
@@ -200,10 +200,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     password: string,
     profile: string
   ): Promise<boolean> => {
-    console.log(username);
-    console.log(email);
-    console.log(password);
-    console.log(profile);
     try {
       const response = await fetch(
         `https://devblog-zkbf.onrender.com/api/auth/local/register`,
@@ -272,14 +268,20 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  const updateExpoPushToken = async (expoPushToken: string) => {
+  const updateExpoPushToken = async (
+    user: User | null,
+    token: string | null,
+    expoPushToken: string
+  ) => {
     try {
       if (!user || !token) {
         throw new Error("User not authenticated");
       }
 
+      console.log({ user });
+
       const response = await axios.put(
-        `${backendBaseUrl}/api/users/${user.id}`,
+        `${backendBaseUrl}/api/users/${user?.id}`,
         { expoPushToken },
         {
           headers: {
