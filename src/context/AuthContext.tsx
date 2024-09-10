@@ -265,7 +265,9 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         return false;
       }
     } catch (error) {
-      setAuthError("Error occurred during login");
+      setAuthError(
+        `Ocorreu um erro durante o login! Verifique seu email e senha!`
+      );
       return false;
     }
   };

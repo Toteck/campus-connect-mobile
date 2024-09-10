@@ -209,114 +209,123 @@ export default function ProfileScreen() {
   return (
     <Center flex={1} p={4}>
       <VStack space={4} alignItems="center">
-        <Text fontSize="4xl" fontWeight="bold">
+        <Text fontSize="4xl" fontWeight="bold" textAlign={"center"}>
+          Nome de usuário {"\n"}
           {user?.username}
         </Text>
-        <Text fontSize="xl" fontWeight="bold">
+
+        <Text fontSize="xl" fontWeight="bold" textAlign={"center"}>
+          Perfil {"\n"}
           {user?.profile}
         </Text>
         <Divider my={4} />
-        <Text textAlign="center" fontSize="md">
-          Personalize o conteúdo que você recebe! Escolha a modalidade, curso e
-          turma a que você pertence nos botões abaixo!
-        </Text>
-
-        {!isEditing && (
+        {user?.profile === "Estudante" && (
           <>
-            <Text>
-              Modalidade:{" "}
-              {user?.modality ? user?.modality?.name : "Não selecionado"}
-            </Text>
-            <Text>
-              {" "}
-              Curso: {user?.course ? user?.course?.name : "Não selecionado"}
-            </Text>
-            <Text>
-              {" "}
-              Turma:{" "}
-              {user?.classroom ? user?.classroom?.name : "Não selecionado"}
-            </Text>
-            <Button bgColor={"blue.500"} onPress={() => setIsEditing(true)}>
-              Editar Modalidade, Curso e Turma
-            </Button>
-          </>
-        )}
-
-        {isEditing && (
-          <>
-            <Select
-              selectedValue={selectedModalidade}
-              minWidth="200"
-              accessibilityLabel="Escolha a modalidade do curso"
-              placeholder="Escolha a modalidade do curso"
-              _selectedItem={{
-                bg: "teal.600",
-                endIcon: <CheckIcon size={5} />,
-              }}
-              onValueChange={(value) => setValue("modalidade", value)}
-            >
-              {modalidades.map((modalidade) => (
-                <Select.Item
-                  key={modalidade.value}
-                  label={modalidade.label}
-                  value={modalidade.value}
-                />
-              ))}
-            </Select>
-            {errors.modalidade && (
-              <Text color="red.500">Modalidade é obrigatória.</Text>
+            {!isEditing && (
+              <>
+                <Text>
+                  Modalidade:{" "}
+                  {user?.modality ? user?.modality?.name : "Não selecionado"}
+                </Text>
+                <Text>
+                  {" "}
+                  Curso: {user?.course ? user?.course?.name : "Não selecionado"}
+                </Text>
+                <Text>
+                  {" "}
+                  Turma:{" "}
+                  {user?.classroom ? user?.classroom?.name : "Não selecionado"}
+                </Text>
+                <Button bgColor={"blue.500"} onPress={() => setIsEditing(true)}>
+                  Editar Modalidade, Curso e Turma
+                </Button>
+              </>
             )}
 
-            <Select
-              selectedValue={selectedCurso}
-              minWidth="200"
-              accessibilityLabel="Escolha o curso"
-              placeholder="Escolha o curso"
-              _selectedItem={{
-                bg: "teal.600",
-                endIcon: <CheckIcon size={5} />,
-              }}
-              isDisabled={!selectedModalidade} // Disable until modalidade is selected
-              onValueChange={(value) => setValue("curso", value)}
-            >
-              {cursos.map((curso) => (
-                <Select.Item
-                  key={curso.value}
-                  label={curso.label}
-                  value={curso.value}
-                />
-              ))}
-            </Select>
-            {errors.curso && <Text color="red.500">Curso é obrigatório.</Text>}
+            {isEditing && (
+              <>
+                <Select
+                  selectedValue={selectedModalidade}
+                  minWidth="200"
+                  accessibilityLabel="Escolha a modalidade do curso"
+                  placeholder="Escolha a modalidade do curso"
+                  _selectedItem={{
+                    bg: "teal.600",
+                    endIcon: <CheckIcon size={5} />,
+                  }}
+                  onValueChange={(value) => setValue("modalidade", value)}
+                >
+                  {modalidades.map((modalidade) => (
+                    <Select.Item
+                      key={modalidade.value}
+                      label={modalidade.label}
+                      value={modalidade.value}
+                    />
+                  ))}
+                </Select>
+                {errors.modalidade && (
+                  <Text color="red.500">Modalidade é obrigatória.</Text>
+                )}
 
-            <Select
-              selectedValue={selectedTurma}
-              minWidth="200"
-              accessibilityLabel="Escolha a turma"
-              placeholder="Escolha a turma"
-              _selectedItem={{
-                bg: "teal.600",
-                endIcon: <CheckIcon size={5} />,
-              }}
-              isDisabled={!selectedCurso} // Disable until curso is selected
-              onValueChange={(value) => setValue("turma", value)}
-            >
-              {turmas.map((turma) => (
-                <Select.Item
-                  key={turma.value}
-                  label={turma.label}
-                  value={turma.value}
-                />
-              ))}
-            </Select>
-            {errors.turma && <Text color="red.500">Turma é obrigatória.</Text>}
+                <Select
+                  selectedValue={selectedCurso}
+                  minWidth="200"
+                  accessibilityLabel="Escolha o curso"
+                  placeholder="Escolha o curso"
+                  _selectedItem={{
+                    bg: "teal.600",
+                    endIcon: <CheckIcon size={5} />,
+                  }}
+                  isDisabled={!selectedModalidade} // Disable until modalidade is selected
+                  onValueChange={(value) => setValue("curso", value)}
+                >
+                  {cursos.map((curso) => (
+                    <Select.Item
+                      key={curso.value}
+                      label={curso.label}
+                      value={curso.value}
+                    />
+                  ))}
+                </Select>
+                {errors.curso && (
+                  <Text color="red.500">Curso é obrigatório.</Text>
+                )}
 
-            <Button isDisabled={!isFormValid} onPress={handleSubmit(onSubmit)}>
-              Salvar
-            </Button>
-            <Button variant="outline" onPress={() => setIsEditing(false)}>
-              Cancelar
-            </Button>
+                <Select
+                  selectedValue={selectedTurma}
+                  minWidth="200"
+                  accessibilityLabel="Escolha a turma"
+                  placeholder="Escolha a turma"
+                  _selectedItem={{
+                    bg: "teal.600",
+                    endIcon: <CheckIcon size={5} />,
+                  }}
+                  isDisabled={!selectedCurso} // Disable until curso is selected
+                  onValueChange={(value) => setValue("turma", value)}
+                >
+                  {turmas.map((turma) => (
+                    <Select.Item
+                      key={turma.value}
+                      label={turma.label}
+                      value={turma.value}
+                    />
+                  ))}
+                </Select>
+                {errors.turma && (
+                  <Text color="red.500">Turma é obrigatória.</Text>
+                )}
+
+                <Button
+                  isDisabled={!isFormValid}
+                  onPress={handleSubmit(onSubmit)}
+                >
+                  Salvar
+                </Button>
+                <Button variant="outline" onPress={() => setIsEditing(false)}>
+                  Cancelar
+                </Button>
+              </>
+            )}
           </>
         )}
 
