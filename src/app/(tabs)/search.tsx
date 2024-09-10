@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { StyleSheet, View } from "react-native";
 import {
   Icon,
   Input,
@@ -12,6 +13,7 @@ import {
   FlatList,
   Text,
   Center,
+  VStack,
 } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import axios from "axios";
@@ -95,25 +97,39 @@ export default function SearchScreen() {
   return (
     <Box flex={1} bg="white" pt={16} px={4}>
       <Header title="Buscar Eventos" />
-      <Input
-        placeholder="Pesquisar eventos"
-        variant="filled"
-        width="100%"
-        bg="green.800"
-        borderRadius="10"
-        py="3"
-        px="2"
-        InputLeftElement={
-          <Icon
-            ml="2"
-            size="5"
-            color="white"
-            as={<MaterialIcons name="search" />}
-          />
-        }
-        value={searchQuery}
-        onChangeText={setSearchQuery}
-      />
+      <HStack maxWidth={"full"} space={1} alignItems="center">
+        <Input
+          placeholder="Pesquisar eventos"
+          placeholderTextColor="rgba(255, 255, 255, 0.6)" // Cor suave para o placeholder
+          variant="filled"
+          bg="green.600" // Cor de fundo do input em tom de verde
+          flex={1}
+          borderRadius="10"
+          py="3"
+          px="4" // Padding maior para o input
+          fontSize="md" // Tamanho de fonte médio
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          color="white" // Cor do texto dentro do input
+          _focus={{
+            bg: "green.600", // Manter o fundo verde ao focar
+            borderColor: "green.700", // Cor da borda ao focar
+          }}
+        />
+        <Button
+          onPress={handleSearch}
+          bg="green.700" // Botão em tom de verde
+          rounded={"md"}
+          justifyContent={"center"}
+          alignItems={"center"}
+          paddingRight={"4"}
+          paddingLeft={"4"}
+          py={3}
+          _pressed={{ bg: "green.800" }} // Cor do botão quando pressionado
+        >
+          <Icon size="7" color="white" as={<MaterialIcons name="search" />} />
+        </Button>
+      </HStack>
 
       <HStack justifyContent="space-between" alignItems="center" mt={2}>
         <Button
@@ -121,14 +137,7 @@ export default function SearchScreen() {
           onPress={() => setShowModal(true)}
           leftIcon={<MaterialIcons size={18} name="settings" />}
         >
-          Filtrar
-        </Button>
-        <Button
-          onPress={handleSearch}
-          colorScheme="blue"
-          leftIcon={<MaterialIcons name="search" size={18} />}
-        >
-          Buscar
+          Filtrar por tipo de evento
         </Button>
       </HStack>
 
@@ -143,6 +152,7 @@ export default function SearchScreen() {
               <Select
                 selectedValue={category}
                 minWidth="200"
+                flex={1}
                 accessibilityLabel="Escolha a categoria"
                 placeholder="Escolha a categoria"
                 _selectedItem={{
@@ -187,6 +197,7 @@ export default function SearchScreen() {
             data={results}
             keyExtractor={(item: Post) => item.id.toString()}
             renderItem={({ item }) => <PostCard item={item} />}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
           />
         ) : (
           <Center>
@@ -197,3 +208,14 @@ export default function SearchScreen() {
     </Box>
   );
 }
+
+const styles = StyleSheet.create({
+  scrollViewArea: {
+    flex: 1,
+    paddingTop: 45,
+    paddingHorizontal: 4,
+  },
+  separator: {
+    height: 20,
+  },
+});
