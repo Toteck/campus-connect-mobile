@@ -24,7 +24,8 @@ type LoginFormInputs = {
 };
 
 const LoginScreen = () => {
-  const { login, authError, isAuthenticated } = useAuth();
+  const { login, authError, isAuthenticated, token } = useAuth();
+
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const { getUser, getToken, updateExpoPushToken } = useAuth();
@@ -50,7 +51,7 @@ const LoginScreen = () => {
         const notificationToken = expoPushToken.data;
         const user = await getUser();
         const token = await getToken();
-        
+
         updateExpoPushToken(user, token, notificationToken);
       }
       router.replace("/(tabs)/home");

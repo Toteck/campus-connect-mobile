@@ -278,8 +278,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         throw new Error("User not authenticated");
       }
 
-      console.log({ user });
-
       const response = await axios.put(
         `${backendBaseUrl}/api/users/${user?.id}`,
         { expoPushToken },

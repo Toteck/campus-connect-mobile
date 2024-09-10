@@ -1,6 +1,6 @@
 import "@/styles/global.css";
 
-import { Redirect, Slot, Stack } from "expo-router";
+import { Redirect, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { NativeBaseProvider } from "native-base";
 import {
@@ -31,7 +31,7 @@ export default function Layout({ navigation }) {
     Roboto_700Bold,
   });
 
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     const handleDeepLink = async (event) => {
@@ -62,14 +62,18 @@ export default function Layout({ navigation }) {
     return <Loading />;
   }
 
+  if (!isAuthenticated) {
+    <Redirect href={{ pathname: "/(auth)/login" }} />;
+  }
+
   return (
     <AuthProvider>
       <PostCacheProvider>
         <NativeBaseProvider>
           <StatusBar style="dark" />
           <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           </Stack>
         </NativeBaseProvider>
       </PostCacheProvider>

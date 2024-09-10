@@ -5,10 +5,20 @@ import Header from "@/components/header";
 import { useEffect, useState } from "react";
 
 import { Post } from "@/types/post";
+import { useAuth } from "@/context/AuthContext";
+import { Redirect, useRouter } from "expo-router";
 
 export default function HomeScreen() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.replace("/(auth)/login");
+    }
+  }, [isAuthenticated]);
 
   useEffect(() => {
     const fetchPosts = async () => {
