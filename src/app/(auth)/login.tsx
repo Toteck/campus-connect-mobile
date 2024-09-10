@@ -141,7 +141,7 @@ const LoginScreen = () => {
         </Button>
         <Text
           onPress={() => {
-            router.push("(auth)/forgotPassword");
+            router.push("/(auth)/forgotPassword");
           }}
         >
           Esqueci minha senha

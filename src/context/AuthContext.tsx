@@ -62,7 +62,8 @@ type AuthState = {
   register: (
     username: string,
     email: string,
-    password: string
+    password: string,
+    profile: string
   ) => Promise<boolean>;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
@@ -196,8 +197,13 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const register = async (
     username: string,
     email: string,
-    password: string
+    password: string,
+    profile: string
   ): Promise<boolean> => {
+    console.log(username);
+    console.log(email);
+    console.log(password);
+    console.log(profile);
     try {
       const response = await fetch(
         `https://devblog-zkbf.onrender.com/api/auth/local/register`,
@@ -210,6 +216,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
             username,
             email,
             password,
+            profile,
           }),
         }
       );
