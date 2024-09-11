@@ -48,6 +48,13 @@ export default function ProfileScreen() {
   const selectedCurso = watch("curso");
   const selectedTurma = watch("turma");
 
+  // Função para controlar a mudança de cor ao clicar no botão de edição
+  const [buttonColor, setButtonColor] = useState("green.600");
+  const handleEditClick = () => {
+    setIsEditing(true);
+    setButtonColor("green.800"); // Muda a cor quando o botão for clicado
+  };
+
   const router = useRouter();
 
   const { logout, user, token, saveUser, getUser } = useAuth();
@@ -189,50 +196,80 @@ export default function ProfileScreen() {
   const isFormValid = selectedModalidade && selectedCurso && selectedTurma;
 
   return (
-    <Center flex={1} p={4}>
-      <VStack space={4} alignItems="center">
-        <Text fontSize="4xl" fontWeight="bold" textAlign={"center"}>
+    <Center flex={1} p={4} bgColor="white">
+      <VStack
+        space={4}
+        alignItems="center"
+        bgColor="green.100"
+        p={6}
+        borderRadius="lg"
+        shadow={3}
+        w="90%"
+        maxW="400px"
+      >
+        <Text
+          fontSize="3xl"
+          fontWeight="bold"
+          textAlign={"center"}
+          color="green.700"
+        >
           Nome de usuário {"\n"}
           {user?.username}
         </Text>
 
-        <Text fontSize="xl" fontWeight="bold" textAlign={"center"}>
+        <Text
+          fontSize="2xl"
+          fontWeight="bold"
+          textAlign={"center"}
+          color="green.700"
+        >
           Perfil {"\n"}
           {user?.profile}
         </Text>
-        <Divider my={4} />
+
+        <Divider my={4} bgColor="green.700" />
+
         {user?.profile === "Estudante" && (
           <>
             {!isEditing && (
               <>
-                <Text>
-                  Modalidade:{" "}
-                  {user?.modality ? user?.modality?.name : "Não selecionado"}
+                <Text fontSize="xl" color="green.800">
+                  <Text fontWeight={"bold"}>Modalidade:</Text>{" "}
+                  {user?.modality?.name || "Não selecionado"}
                 </Text>
-                <Text>
-                  {" "}
-                  Curso: {user?.course ? user?.course?.name : "Não selecionado"}
+                <Text fontSize="xl" color="green.800">
+                  <Text fontWeight={"bold"}>Curso:</Text>{" "}
+                  {user?.course?.name || "Não selecionado"}
                 </Text>
-                <Text>
-                  {" "}
-                  Turma:{" "}
-                  {user?.classroom ? user?.classroom?.name : "Não selecionado"}
+                <Text fontSize="xl" color="green.800">
+                  <Text fontWeight={"bold"}>Turma:</Text>{" "}
+                  {user?.classroom?.name || "Não selecionado"}
                 </Text>
-                <Button bgColor={"blue.500"} onPress={() => setIsEditing(true)}>
+                <Button
+                  bg={buttonColor}
+                  _pressed={{ bg: "green.800" }}
+                  onPress={handleEditClick}
+                  size="lg"
+                  mt={4}
+                >
                   Editar Modalidade, Curso e Turma
                 </Button>
               </>
             )}
 
             {isEditing && (
-              <>
+              <Box width={"full"}>
                 <Select
                   selectedValue={selectedModalidade}
                   minWidth="200"
-                  accessibilityLabel="Escolha a modalidade do curso"
                   placeholder="Escolha a modalidade do curso"
+                  bgColor={"green.600"}
+                  color={"white"}
+                  fontWeight={"semibold"}
+                  fontSize={"lg"}
+                  mb={"4"}
                   _selectedItem={{
-                    bg: "teal.600",
+                    bg: "green.600",
                     endIcon: <CheckIcon size={5} />,
                   }}
                   onValueChange={(value) => setValue("modalidade", value)}
@@ -245,20 +282,21 @@ export default function ProfileScreen() {
                     />
                   ))}
                 </Select>
-                {errors.modalidade && (
-                  <Text color="red.500">Modalidade é obrigatória.</Text>
-                )}
 
                 <Select
                   selectedValue={selectedCurso}
                   minWidth="200"
-                  accessibilityLabel="Escolha o curso"
                   placeholder="Escolha o curso"
+                  bgColor={"green.600"}
+                  color={"white"}
+                  fontWeight={"semibold"}
+                  fontSize={"lg"}
+                  mb={"4"}
                   _selectedItem={{
-                    bg: "teal.600",
+                    bg: "green.600",
                     endIcon: <CheckIcon size={5} />,
                   }}
-                  isDisabled={!selectedModalidade} // Disable until modalidade is selected
+                  isDisabled={!selectedModalidade}
                   onValueChange={(value) => setValue("curso", value)}
                 >
                   {cursos.map((curso) => (
@@ -269,20 +307,21 @@ export default function ProfileScreen() {
                     />
                   ))}
                 </Select>
-                {errors.curso && (
-                  <Text color="red.500">Curso é obrigatório.</Text>
-                )}
 
                 <Select
                   selectedValue={selectedTurma}
                   minWidth="200"
-                  accessibilityLabel="Escolha a turma"
                   placeholder="Escolha a turma"
+                  bgColor={"green.600"}
+                  color={"white"}
+                  fontWeight={"semibold"}
+                  fontSize={"lg"}
+                  mb={"4"}
                   _selectedItem={{
-                    bg: "teal.600",
+                    bg: "green.600",
                     endIcon: <CheckIcon size={5} />,
                   }}
-                  isDisabled={!selectedCurso} // Disable until curso is selected
+                  isDisabled={!selectedCurso}
                   onValueChange={(value) => setValue("turma", value)}
                 >
                   {turmas.map((turma) => (
@@ -293,25 +332,33 @@ export default function ProfileScreen() {
                     />
                   ))}
                 </Select>
-                {errors.turma && (
-                  <Text color="red.500">Turma é obrigatória.</Text>
-                )}
 
                 <Button
                   isDisabled={!isFormValid}
                   onPress={handleSubmit(onSubmit)}
+                  size="lg"
+                  bg="green.500"
+                  _pressed={{ bg: "green.700" }}
+                  mt={4}
                 >
                   Salvar
                 </Button>
-                <Button variant="outline" onPress={() => setIsEditing(false)}>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  borderColor="green.500"
+                  _pressed={{ bg: "green.100" }}
+                  onPress={() => setIsEditing(false)}
+                  mt={2}
+                >
                   Cancelar
                 </Button>
-              </>
+              </Box>
             )}
           </>
         )}
 
-        <Button onPress={goToLogin} colorScheme="red">
+        <Button onPress={goToLogin} colorScheme="red" size="lg" mt={4}>
           Sair
         </Button>
       </VStack>
