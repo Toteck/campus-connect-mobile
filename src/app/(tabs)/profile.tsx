@@ -241,7 +241,7 @@ export default function ProfileScreen() {
                     <Select.Item
                       key={modalidade.value}
                       label={modalidade.label}
-                      value={modalidade.value}
+                      value={modalidade.value.toString()}
                     />
                   ))}
                 </Select>
@@ -265,7 +265,7 @@ export default function ProfileScreen() {
                     <Select.Item
                       key={curso.value}
                       label={curso.label}
-                      value={curso.value}
+                      value={curso.value.toString()}
                     />
                   ))}
                 </Select>
@@ -289,7 +289,7 @@ export default function ProfileScreen() {
                     <Select.Item
                       key={turma.value}
                       label={turma.label}
-                      value={turma.value}
+                      value={turma.value.toString()}
                     />
                   ))}
                 </Select>
