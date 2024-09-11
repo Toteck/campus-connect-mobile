@@ -58,13 +58,12 @@ const LoginScreen = () => {
     const success = await login(data.email, data.password);
 
     if (success) {
-      if (expoPushToken) {
-        const notificationToken = expoPushToken.data;
-        const user = await getUser();
-        const token = await getToken();
-
-        updateExpoPushToken(user, token, notificationToken);
-      }
+      // if (expoPushToken) {
+      //   const notificationToken = expoPushToken.data;
+      //   const user = await getUser();
+      //   const token = await getToken();
+      //   updateExpoPushToken(user, token, notificationToken);
+      // }
       router.replace("/(tabs)/home");
     } else {
       setIsSubmitting(false); // Reabilitar o botão em caso de erro

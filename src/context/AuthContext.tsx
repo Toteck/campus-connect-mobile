@@ -76,6 +76,7 @@ type AuthState = {
     token: string | null,
     expoPushToken: string
   ) => Promise<void>;
+  saveUser: (user: User) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthState>({
@@ -92,6 +93,7 @@ const AuthContext = createContext<AuthState>({
   clearToken: async () => {},
   saveToken: async () => {},
   updateExpoPushToken: async () => {},
+  saveUser: async () => {},
 });
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
@@ -156,17 +158,21 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         throw new Error("No token found");
       }
 
-      const response = await axios.get(backendBaseUrl + "/api/users/me", {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
+      const response = await axios.get(
+        backendBaseUrl + "/api/users/me?populate=*",
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
 
       // Aqui você pode tratar a resposta e atualizar o estado do usuário
       const userData = response.data;
+      if (!userData) throw new Error("Error getting user");
 
-      await saveUser(userData);
-      setUser(userData); // Se você quiser armazenar o usuário no estado
+      //await saveUser(userData);
+      //setUser(userData); // Se você quiser armazenar o usuário no estado
       return userData;
     } catch (error) {
       console.error("Error getting user:", error);
@@ -242,8 +248,12 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
       if (responseData?.user && responseData?.jwt) {
         await saveToken(responseData.jwt);
+        const query =
+          responseData?.user.profile === "Estudante"
+            ? "/api/users/me?populate=*"
+            : "/api/users/me";
         const responseWithAcademicInfo = await axios.get(
-          backendBaseUrl + "/api/users/me?populate=*",
+          backendBaseUrl + query,
           {
             headers: {
               Authorization: `Bearer ${responseData.jwt}`,
@@ -252,7 +262,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         );
 
         const user = responseWithAcademicInfo.data;
-
         await saveUser(user);
         setIsAuthenticated(true);
         return true;
@@ -317,6 +326,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         clearToken,
         saveToken,
         updateExpoPushToken,
+        saveUser,
       }}
     >
       {children}

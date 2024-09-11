@@ -17,38 +17,9 @@ import { useRouter } from "expo-router";
 import { useAuth } from "@/context/AuthContext";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-
-type Modality = {
-  id: number;
-  attributes: {
-    name: string;
-    description: string;
-    createdAt: string;
-    updatedAt: string;
-    slug: string;
-  };
-};
-
-type Course = {
-  id: number;
-  attributes: {
-    description: string;
-    slug: string;
-    createdAt: string;
-    updatedAt: string;
-    name: string;
-  };
-};
-
-type Classroom = {
-  id: number;
-  attributes: {
-    slug: string;
-    createdAt: string;
-    updatedAt: string;
-    name: string;
-  };
-};
+import { Modality } from "@/types/modality";
+import { Course } from "@/types/course";
+import { Classroom } from "@/types/classroom";
 
 export default function ProfileScreen() {
   const {
@@ -77,8 +48,9 @@ export default function ProfileScreen() {
   const selectedCurso = watch("curso");
   const selectedTurma = watch("turma");
 
-  const { logout, user, token } = useAuth();
   const router = useRouter();
+
+  const { logout, user, token, saveUser, getUser } = useAuth();
 
   useEffect(() => {
     axios
@@ -163,7 +135,7 @@ export default function ProfileScreen() {
     }
   }, [selectedTurma]);
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     const updateData = {
       classroom: data.turma,
       course: data.curso,
@@ -180,18 +152,28 @@ export default function ProfileScreen() {
           },
         }
       )
-      .then((response) => {
-        setAlertType("success");
-        setAlertMessage("Perfil atualizado com sucesso!");
-        setShowAlert(true);
-        // Sai do modo edição após salvar
-        setIsEditing(false);
+      .then(async (response) => {
+        console.log("Tela profile após fazer o put do usuário");
+
+        const updatedUser = await getUser();
+        if (updatedUser) {
+          await saveUser(updatedUser);
+
+          setAlertType("success");
+          setAlertMessage("Perfil atualizado com sucesso!");
+          setShowAlert(true);
+          // Sai do modo edição após salvar
+          setIsEditing(false);
+        } else {
+          throw new Error("User is null");
+        }
       })
       .catch((error) => {
         setAlertType("error");
         setAlertMessage("Erro ao atualizar perfil.");
         setShowAlert(true);
       });
+    //await saveUser;
   };
 
   const goToLogin = () => {
